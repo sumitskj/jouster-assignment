@@ -6,7 +6,9 @@ To run using Docker, use following commands:
 
 `docker-compose up`
 
+
 To run apps individually:
+
 You need postgres and poetry locally installed.
 
 For Backend run command:
