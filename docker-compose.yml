@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Backend API
+  backend:
+    build:
+      context: ./llm-extracter
+      dockerfile: Dockerfile
+    container_name: llm-extracter-backend
+    environment:
+      - DB_URL=postgres://postgres:postgres@db:5432/postgres
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build:
+      context: ./llm-extracter-frontend
+      dockerfile: Dockerfile
+    container_name: llm-extracter-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:
